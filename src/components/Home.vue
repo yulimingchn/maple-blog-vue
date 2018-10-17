@@ -77,16 +77,16 @@
       }
     },
     mounted: function () {
-      this.$alert('欢迎', '友情提示', {
-        confirmButtonText: '确定',
-        callback: action => {
-        }
-      });
       var _this = this;
       getRequest("/currentUserName").then(function (msg) {
         _this.currentUserName = msg.data;
       }, function (msg) {
         _this.currentUserName = '游客';
+      });
+      this.$alert('欢迎'+ _this.currentUserName, '友情提示', {
+        confirmButtonText: '确定',
+        callback: action => {
+        }
       });
     },
     data(){
