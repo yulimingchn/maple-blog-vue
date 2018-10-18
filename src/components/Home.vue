@@ -83,7 +83,7 @@
       }, function (msg) {
         _this.currentUserName = '游客';
       });
-      this.$alert('欢迎'+ _this.currentUserName, '友情提示', {
+      this.$alert('欢迎您', '亲爱的', {
         confirmButtonText: '确定',
         callback: action => {
         }
