@@ -29,7 +29,7 @@
           width="120" align="left">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="createDate"
           label="启用时间" align="left">
           <template slot-scope="scope">{{ scope.row.createDate | formatDate}}</template>
         </el-table-column>
