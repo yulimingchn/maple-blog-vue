@@ -228,6 +228,4 @@
     vertical-align: bottom;
   }
 
-  .post-article {
-  }
 </style>
