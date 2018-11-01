@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Login from '@/components/Login'
-import Home from '@/components/Home'
-import ArticleList from '@/components/ArticleList'
-import CateMana from '@/components/CateMana'
-import DataCharts from '@/components/DataCharts'
-import PostArticle from '@/components/PostArticle'
-import UserMana from '@/components/UserMana'
-import BlogDetail from '@/components/BlogDetail'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Login from '@/components/Login';
+import Home from '@/components/Home';
+import ArticleList from '@/components/ArticleList';
+import CateMana from '@/components/CateMana';
+import DataCharts from '@/components/DataCharts';
+import PostArticle from '@/components/PostArticle';
+import UserMana from '@/components/UserMana';
+import BlogDetail from '@/components/BlogDetail';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -100,4 +100,4 @@ export default new Router({
       ]
     }
   ]
-})
+});
