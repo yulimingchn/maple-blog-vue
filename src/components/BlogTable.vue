@@ -94,7 +94,7 @@
         loading: false,
         currentPage: 1,
         totalCount: -1,
-        pageSize: 6,
+        pageSize: 10,
         keywords: '',
         dustbinData: []
       }

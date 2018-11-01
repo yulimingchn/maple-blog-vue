@@ -1,5 +1,6 @@
 <template>
   <div id="app" style="background-color: rgba(235, 235, 235, 0.08)">
+    <img src=".assets/timg.jpg">
     <router-view/>
   </div>
 </template>

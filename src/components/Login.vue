@@ -47,7 +47,7 @@
             if (json.status == 'success') {
               _this.$router.replace({path: '/home'});
             } else {
-              _this.$alert('登录失败!', '失败!');
+              _this.$alert('用户名密码错误!', '失败!');
             }
           } else {
             //失败
