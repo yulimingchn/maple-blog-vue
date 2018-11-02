@@ -5,6 +5,7 @@ import Home from '@/components/Home';
 import ArticleList from '@/components/ArticleList';
 import CateMana from '@/components/CateMana';
 import DataCharts from '@/components/DataCharts';
+import consumerAmount from '@/components/consumerAmount';
 import PostArticle from '@/components/PostArticle';
 import UserMana from '@/components/UserMana';
 import BlogDetail from '@/components/BlogDetail';
@@ -94,8 +95,14 @@ export default new Router({
         {
           path: '/charts',
           iconCls: 'fa fa-bar-chart',
-          name: '数据统计',
+          name: '浏览数据统计',
           component: DataCharts
+        },
+        {
+          path: '/amoutCharts',
+          iconCls: 'fa fa-bar-chart',
+          name: '消费金额统计',
+          component: consumerAmount
         }
       ]
     }
