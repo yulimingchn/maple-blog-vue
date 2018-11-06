@@ -70,7 +70,7 @@ export default new Router({
         {
           path: '/user',
           iconCls: 'fa fa-user-o',
-          name: '用户管理',
+          name: '用户列表',
           component: UserMana
         }
       ]
@@ -82,7 +82,7 @@ export default new Router({
         {
           path: '/cateMana',
           iconCls: 'fa fa-reorder',
-          name: '栏目管理',
+          name: '栏目列表',
           component: CateMana
         }
       ]
