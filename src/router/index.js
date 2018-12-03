@@ -9,6 +9,7 @@ import consumerAmount from '@/components/consumerAmount';
 import PostArticle from '@/components/PostArticle';
 import UserMana from '@/components/UserMana';
 import BlogDetail from '@/components/BlogDetail';
+import formValid from '@/components/formValid';
 
 Vue.use(Router);
 
@@ -103,6 +104,20 @@ export default new Router({
           iconCls: 'fa fa-bar-chart',
           name: '消费金额统计',
           component: consumerAmount
+        }
+      ]
+    }
+    , {
+      path: '/home',
+      component: Home,
+      name: '登录验证',
+      iconCls: 'fa fa-bar-chart',
+      children: [
+        {
+          path: '/formValid',
+          iconCls: 'fa fa-bar-chart',
+          name: '登录验证',
+          component: formValid
         }
       ]
     }
