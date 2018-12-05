@@ -5,9 +5,11 @@
         placeholder="请输入消费名称"
         v-model="cateName" style="width: 200px;">
       </el-input>
-      <el-button type="primary" size="medium" style="margin-left: 10px" @click="addNewConsume">新增记录</el-button>
+      <el-button type="primary" size="medium" style="margin-left: 10px" @click="addNewConsume(0)">新增记录</el-button>
     </el-header>
     <el-main class="consume_mana_main">
+         <!--弹窗，新增、修改 -->
+    <consume v-if="addVisiale" ref="consume"></consume>
       <el-table
         ref="multipleTable"
         :data="consumes"
@@ -86,35 +88,25 @@
   </el-container>
 </template>
 <script>
-  import {postRequest} from '../utils/api'
-  import {putRequest} from '../utils/api'
-  import {deleteRequest} from '../utils/api'
-  import {getRequest} from '../utils/api'
+    import consume from '@/components/consume'
+    import {postRequest} from '../utils/api'
+    import {putRequest} from '../utils/api'
+    import {deleteRequest} from '../utils/api'
+    import {getRequest} from '../utils/api'
   export default{
+      components:{
+        'consume':consume
+    },
     methods: {
           searchClick(){
         this.loadConsumes(1, this.pageSize);
       },
-      addNewConsume(){
-        this.loading = true;
+      addNewConsume(id){
         var _this = this;
-        postRequest('/admin/category/', {cateName: this.cateName}).then(resp=> {
-          if (resp.status == 200) {
-            var json = resp.data;
-            _this.$message({type: json.status, message: json.msg});
-            _this.cateName = '';
-            _this.refresh();
-          }
-          _this.loading = false;
-        }, resp=> {
-          if (resp.response.status == 403) {
-            _this.$message({
-              type: 'error',
-              message: resp.response.data
-            });
-          }
-          _this.loading = false;
-        });
+        _this.addVisiale = true
+        _this.$nextTick(()=>{
+            _this.$refs.consume.init(id)
+        })
       },
       deleteAll(){
         var _this = this;
@@ -211,7 +203,7 @@
           } else if (resp.response.status == 500) {
             _this.$message({
               type: 'error',
-              message: '该栏目下尚有文章，删除失败!'
+              message: '服务器错误，删除失败!'
             });
           }
         })
@@ -244,6 +236,11 @@
     mounted: function () {
       this.loading = true;
       this.loadConsumes(1, this.pageSize);
+      var _this = this;
+       window.bus.$on('consumeTableReload', function () {
+        _this.loading = true;
+        _this.loadConsumes(_this.currentPage, _this.pageSize);
+      })
     },
     data(){
       return {
@@ -255,7 +252,8 @@
         totalCount: -1,
         pageSize: 10,
         keywords: '',
-        loading: false
+        loading: false,
+        addVisiale:false
       }
     }
   }

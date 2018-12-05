@@ -9,7 +9,6 @@ import ConsumerAmount from '@/components/ConsumerAmount';
 import PostArticle from '@/components/PostArticle';
 import UserMana from '@/components/UserMana';
 import BlogDetail from '@/components/BlogDetail';
-import Consume from '@/components/Consume';
 import ConsumeList from '@/components/ConsumeList';
 
 Vue.use(Router);
@@ -113,12 +112,6 @@ export default new Router({
       name: '消费记录',
       iconCls: 'fa fa-reorder',
       children: [
-        {
-          path: '/consumeAdd',
-          iconCls: 'fa fa-reorder',
-          name: '消费新增',
-          component: Consume
-        },
         {
           path: '/consumeList',
           iconCls: 'fa fa-reorder',

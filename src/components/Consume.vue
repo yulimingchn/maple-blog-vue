@@ -1,6 +1,10 @@
 <template>
+    <el-dialog
+        :title="!consume.id ? '新增' : '修改'"
+        :close-on-click-modal="false"
+        :visible.sync="visible">
     <div>
-        <el-form :model="consume" :rules="rules" ref="consume" label-width="100px" >
+        <el-form :model="consume" :rules="rules" ref="consume" label-width="80px" >
             <el-form-item label="消费名称" prop="name">
                 <el-input v-model="consume.name"></el-input>
             </el-form-item>
@@ -31,6 +35,7 @@
             </el-form-item>
         </el-form>
     </div>
+    </el-dialog>
 </template>
 <script>
  import {getRequest} from '../utils/api'
@@ -42,6 +47,7 @@ export default {
     },
   data() {
     return {
+        visible:false,
         categories: [],
         consume: {
         id:0,
@@ -72,6 +78,27 @@ export default {
     };
   },
   methods: {
+      init(id){
+          let _this = this;
+          _this.consume.id = id || 0
+          _this.visible = true
+          _this.$nextTick(()=>{
+             if(_this.consume.id){
+                 _this.loading = true;
+                  getRequest("/admin/consum/detail/"+id).then(resp=> {
+                      _this.loading = false;
+                      if(resp.status == 200){
+                        _this.consume = resp.data;
+                      }else{
+                          _this.$message({
+                            type: 'error',
+                            message: '数据加载失败！'
+            });
+                      }
+            });
+             } 
+          })
+      },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -88,8 +115,10 @@ export default {
           if (resp.status == 200 && resp.data.status == 'success') {
             _this.consume.id = resp.data.msg;
             _this.$message({type: 'success', message:  '保存成功!' });
+             window.bus.$emit('consumeTableReload');
+            _this.visible = false;
 //            if (_this.from != undefined) {
-            window.bus.$emit('blogTableReload')
+            //window.bus.$emit('_this.categories = resp.data;')
 //            }
           }
         })
