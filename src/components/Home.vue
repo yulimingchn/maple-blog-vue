@@ -78,16 +78,21 @@
     },
     mounted: function () {
       var _this = this;
-      getRequest("/currentUserName").then(function (msg) {
-        _this.currentUserName = msg.data;
-      }, function (msg) {
-        _this.currentUserName = '游客';
-      });
-      this.$alert('欢迎您', '亲爱的', {
-        confirmButtonText: '确定',
-        callback: action => {
-        }
-      });
+      getRequest("/currentUserName").then(resp=> {
+          if (resp.status == 200) {
+            //成功
+            _this.currentUserName =resp.data;
+          } else if(resp.status==302) {
+            //失败
+            _this.$alert('登录已过期!', '失败!');
+            _this.$router.replace({path: '/'});
+          }else{
+             _this.$router.replace({path: '/'});
+          }
+        }, resp=> {
+          _this.loading = false;
+          _this.$alert('服务器异常。。。', '失败!');
+        });
     },
     data(){
       return {
