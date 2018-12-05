@@ -1,16 +1,16 @@
 <template>
   <el-container>
-    <el-header class="cate_mana_header">
+    <el-header class="consume_mana_header">
       <el-input
-        placeholder="请输入栏目名称"
+        placeholder="请输入消费名称"
         v-model="cateName" style="width: 200px;">
       </el-input>
-      <el-button type="primary" size="medium" style="margin-left: 10px" @click="addNewCate">新增栏目</el-button>
+      <el-button type="primary" size="medium" style="margin-left: 10px" @click="addNewConsume">新增记录</el-button>
     </el-header>
-    <el-main class="cate_mana_main">
+    <el-main class="consume_mana_main">
       <el-table
         ref="multipleTable"
-        :data="categories"
+        :data="consumes"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange" v-loading="loading">
@@ -24,19 +24,39 @@
           width="120" align="left">
         </el-table-column>
         <el-table-column
-          label="栏目名称"
-          prop="cateName"
+          label="消费名称"
+          prop="consumeName"
           width="120" align="left">
         </el-table-column>
         <el-table-column
-          label="栏目类型"
-          prop="type"
+          label="消费金额"
+          prop="consumeAmount"
           width="120" align="left">
         </el-table-column>
         <el-table-column
-          prop="createDate"
-          label="启用时间" align="left">
-          <template slot-scope="scope">{{ scope.row.createDate | formatDate}}</template>
+          prop="consumeDate"
+          label="消费时间" width="120" align="left">
+          <template slot-scope="scope">{{ scope.row.consumeDate | formatDate}}</template>
+        </el-table-column>
+        <el-table-column
+          label="消费分类"
+          prop="categoryName"
+          width="120" align="left">
+        </el-table-column>
+        <el-table-column
+          label="消费描述"
+          prop="consumeDesc"
+          width="120" align="left">
+        </el-table-column>
+        <el-table-column
+          label="创建时间"
+          prop="createTime"
+          width="120" align="left">
+        </el-table-column>
+        <el-table-column
+          label="更新时间"
+          prop="updateTime"
+          width="120" align="left">
         </el-table-column>
         <el-table-column label="操作" align="left">
           <template slot-scope="scope">
@@ -55,6 +75,13 @@
       <el-button type="danger" :disabled="this.selItems.length==0" style="margin-top: 10px;width: 100px;"
                  @click="deleteAll" v-if="this.categories.length>0">批量删除
       </el-button>
+      <span></span>
+      <el-pagination
+        background
+        :page-size="pageSize"
+        layout="prev, pager, next"
+        :total="totalCount" @current-change="currentChange" v-show="this.consumes.length>0">
+      </el-pagination>
     </el-main>
   </el-container>
 </template>
@@ -65,7 +92,10 @@
   import {getRequest} from '../utils/api'
   export default{
     methods: {
-      addNewCate(){
+          searchClick(){
+        this.loadConsumes(1, this.pageSize);
+      },
+      addNewConsume(){
         this.loading = true;
         var _this = this;
         postRequest('/admin/category/', {cateName: this.cateName}).then(resp=> {
@@ -103,6 +133,12 @@
           //取消
           _this.loading = false;
         });
+      },
+       //翻页
+      currentChange(currentPage){
+        this.currentPage = currentPage;
+        this.loading = true;
+        this.loadConsumes(currentPage, this.pageSize);
       },
       handleSelectionChange(val) {
         this.selItems = val;
@@ -148,23 +184,23 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          _this.deleteCate(row.id);
+          _this.deleteConsume(row.id);
         }).catch(() => {
           //取消
           _this.loading = false;
         });
       },
-      deleteCate(ids){
+      deleteConsume(ids){
         var _this = this;
         this.loading = true;
         //删除
-        deleteRequest("/admin/category/" + ids).then(resp=> {
+        deleteRequest("/admin/consume/" + ids).then(resp=> {
           var json = resp.data;
           _this.$message({
             type: json.status,
             message: json.msg
           });
-          _this.refresh();
+          currentChange(currentPage);
         }, resp=> {
           _this.loading = false;
           if (resp.response.status == 403) {
@@ -180,38 +216,52 @@
           }
         })
       },
-      refresh(){
-        let _this = this;
-        getRequest("/admin/category/all").then(resp=> {
-          _this.categories = resp.data;
+       loadConsumes(page, count){
+        var _this = this;
+        var  url = "/admin/consume/all" + "?page=" + page + "&count=" + count + "&keywords=" + this.keywords;
+        getRequest(url).then(resp=> {
           _this.loading = false;
-        }, resp=> {
-          if (resp.response.status == 403) {
-            _this.$message({
-              type: 'error',
-              message: resp.response.data
-            });
+          if (resp.status == 200) {
+            _this.consumes = resp.data.consumes;
+            _this.totalCount=resp.data.totalCount;
+          } else {
+            _this.$message({type: 'error', message: '数据加载失败!'});
           }
+        }, resp=> {
           _this.loading = false;
-        });
-      }
+          if (resp.response.status == 403) {
+            _this.$message({type: 'error', message: resp.response.data});
+          } else {
+            _this.$message({type: 'error', message: '数据加载失败!'});
+          }
+        }).catch(resp=> {
+          //压根没见到服务器
+          _this.loading = false;
+          _this.$message({type: 'error', message: '数据加载失败!'});
+        })
+      },
     },
     mounted: function () {
       this.loading = true;
-      this.refresh();
+      this.loadConsumes(1, this.pageSize);
     },
     data(){
       return {
         cateName: '',
         selItems: [],
         categories: [],
+        consumes:[],
+        currentPage: 1,
+        totalCount: -1,
+        pageSize: 10,
+        keywords: '',
         loading: false
       }
     }
   }
 </script>
 <style>
-  .cate_mana_header {
+  .consume_mana_header {
     background-color: #ececec;
     margin-top: 20px;
     padding-left: 5px;
@@ -219,7 +269,7 @@
     justify-content: flex-start;
   }
 
-  .cate_mana_main {
+  .consume_mana_main {
     /*justify-content: flex-start;*/
     display: flex;
     flex-direction: column;

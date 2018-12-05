@@ -5,11 +5,12 @@ import Home from '@/components/Home';
 import ArticleList from '@/components/ArticleList';
 import CateMana from '@/components/CateMana';
 import DataCharts from '@/components/DataCharts';
-import consumerAmount from '@/components/consumerAmount';
+import ConsumerAmount from '@/components/ConsumerAmount';
 import PostArticle from '@/components/PostArticle';
 import UserMana from '@/components/UserMana';
 import BlogDetail from '@/components/BlogDetail';
-import formValid from '@/components/formValid';
+import Consume from '@/components/Consume';
+import ConsumeList from '@/components/ConsumeList';
 
 Vue.use(Router);
 
@@ -103,21 +104,26 @@ export default new Router({
           path: '/amoutCharts',
           iconCls: 'fa fa-bar-chart',
           name: '消费金额统计',
-          component: consumerAmount
+          component: ConsumerAmount
         }
       ]
-    }
-    , {
+    }, {
       path: '/home',
       component: Home,
-      name: '登录验证',
-      iconCls: 'fa fa-bar-chart',
+      name: '消费记录',
+      iconCls: 'fa fa-reorder',
       children: [
         {
-          path: '/formValid',
-          iconCls: 'fa fa-bar-chart',
-          name: '登录验证',
-          component: formValid
+          path: '/consumeAdd',
+          iconCls: 'fa fa-reorder',
+          name: '消费新增',
+          component: Consume
+        },
+        {
+          path: '/consumeList',
+          iconCls: 'fa fa-reorder',
+          name: '消费列表',
+          component: ConsumeList
         }
       ]
     }

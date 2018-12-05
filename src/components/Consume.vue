@@ -34,14 +34,20 @@
 </template>
 <script>
  import {getRequest} from '../utils/api'
+ import {postRequest} from '../utils/api'
 export default {
+        mounted: function () {
+      this.getCategories();
+      
+    },
   data() {
     return {
         categories: [],
-      consume: {
+        consume: {
+        id:0,
         name: "",
+        category:0,
         amount:0,
-       
         date: "",
         desc: ""
       },
@@ -69,7 +75,24 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          var _this = this;
+        _this.loading = true;
+        postRequest("/admin/create/consume", {
+          name: _this.consume.name,
+          amount: _this.consume.amount,
+          category: _this.consume.category,
+          date: _this.consume.date,
+          desc: _this.consume.desc
+        }).then(resp=> {
+          _this.loading = false;
+          if (resp.status == 200 && resp.data.status == 'success') {
+            _this.consume.id = resp.data.msg;
+            _this.$message({type: 'success', message:  '保存成功!' });
+//            if (_this.from != undefined) {
+            window.bus.$emit('blogTableReload')
+//            }
+          }
+        })
         } else {
           console.log("error submit!!");
           return false;
@@ -78,7 +101,13 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    }
+    },
+     getCategories(){
+        let _this = this;
+        getRequest("/admin/category/consume").then(resp=> {
+          _this.categories = resp.data;
+        });
+      }
   }
 };
 </script>
