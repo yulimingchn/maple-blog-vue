@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-let base = '';
+let base = process.env.API_ROOT;
+console.log('process=',process)
+console.log('base=',base)
 export const postRequest = (url, params) => {
   return axios({
     method: 'post',
