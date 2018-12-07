@@ -1,12 +1,11 @@
 import axios from 'axios';
 
 let base = process.env.API_ROOT;
-console.log('process=',process)
-console.log('base=',base)
+
 export const postRequest = (url, params) => {
   return axios({
     method: 'post',
-    url: `${base}${url}`,
+    url: base+url,
     data: params,
     transformRequest: [function (data) {
       // Do whatever you want to transform the data
@@ -24,7 +23,7 @@ export const postRequest = (url, params) => {
 export const uploadFileRequest = (url, params) => {
   return axios({
     method: 'post',
-    url: `${base}${url}`,
+    url: base+url,
     data: params,
     headers: {
       'Content-Type': 'multipart/form-data'
@@ -34,7 +33,7 @@ export const uploadFileRequest = (url, params) => {
 export const putRequest = (url, params) => {
   return axios({
     method: 'put',
-    url: `${base}${url}`,
+    url: base+url,
     data: params,
     transformRequest: [function (data) {
       let ret = '';
@@ -51,7 +50,7 @@ export const putRequest = (url, params) => {
 export const deleteRequest = (url) => {
   return axios({
     method: 'delete',
-    url: `${base}${url}`
+    url: base+url
   });
 };
 export const getRequest = (url,params) => {
@@ -68,6 +67,6 @@ export const getRequest = (url,params) => {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    url: `${base}${url}`
+    url:base+url
   });
 };
